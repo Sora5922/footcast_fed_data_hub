@@ -5,77 +5,59 @@
     <title>Arkema Première Ligue - Data Hub</title>
     <style>
         :root {
-            --primary: #00d2ff;
-            --secondary: #3a7bd5;
-            --accent: #28a745;
-            --bg-dark: #0f1115;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --text-main: #ffffff;
-            --text-dim: #94a3b8;
-            --border: rgba(255, 255, 255, 0.15);
+            --primary: #00d2ff; --secondary: #3a7bd5; --accent: #28a745;
+            --bg-dark: #0f1115; --card-bg: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff; --text-dim: #94a3b8; --border: rgba(255, 255, 255, 0.15);
             --id-color: #ffc107;
-            --color-milieu: #6f42c1;
-            --color-attaque: #dc3545;
-            --color-defense: #198754;
-            --color-gardienne: #2a2d35;
+            --color-milieu: #6f42c1; --color-attaque: #dc3545; --color-defense: #198754; --color-gardienne: #2a2d35;
         }
 
         body { 
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
             background-color: var(--bg-dark); 
-            background-image: radial-gradient(at 0% 0%, rgba(58, 123, 213, 0.15) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(0, 210, 255, 0.1) 0px, transparent 50%);
+            background-image: radial-gradient(at 0% 0%, rgba(58, 123, 213, 0.15) 0px, transparent 50%);
             color: var(--text-main); padding: 40px 20px; margin: 0; min-height: 100vh;
         }
 
         .container { max-width: 1200px; margin: auto; }
-        h1 { font-size: 2rem; font-weight: 800; margin-bottom: 40px; text-align: center; text-transform: uppercase; }
+        h1 { text-align: center; text-transform: uppercase; font-weight: 800; margin-bottom: 40px; }
         h1 span { color: var(--primary); }
 
         .controls { 
-            background: var(--card-bg); backdrop-filter: blur(10px); padding: 30px; border-radius: 20px; 
-            margin-bottom: 30px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            text-align: center;
+            background: var(--card-bg); padding: 30px; border-radius: 20px; 
+            margin-bottom: 30px; border: 1px solid var(--border); text-align: center;
         }
 
-        .config-row { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        .config-row { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
 
         input[type="number"], select { 
             background: #1a1a1a; color: #ffffff; padding: 12px 18px; border-radius: 12px; 
             border: 1px solid var(--border); font-size: 1rem; font-weight: bold; outline: none;
         }
         
-        input[type="number"] { width: 100px; text-align: center; }
-
-        button { padding: 12px 25px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; transition: all 0.2s ease; text-transform: uppercase; }
+        button { padding: 12px 25px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
         .btn-load { background: var(--primary); color: #000; }
-        .btn-load:hover { background: #fff; transform: translateY(-2px); }
+        .btn-load:disabled { opacity: 0.5; }
 
-        .table-wrapper { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        #status-msg { font-size: 0.85rem; margin-top: 10px; font-weight: bold; }
+
+        .table-wrapper { background: var(--card-bg); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; margin-top: 20px; }
         table { width: 100%; border-collapse: collapse; }
-        
-        th { 
-            background: rgba(0, 0, 0, 0.4); padding: 20px; text-align: left; font-size: 0.8rem; 
-            text-transform: uppercase; color: var(--primary); letter-spacing: 1px; border-bottom: 2px solid var(--border);
-            cursor: pointer; user-select: none;
-        }
-        th:hover { background: rgba(255, 255, 255, 0.1); }
-        th .sort-icon { margin-left: 5px; font-size: 0.7rem; color: var(--text-dim); }
-
+        th { background: rgba(0, 0, 0, 0.4); padding: 20px; text-align: left; color: var(--primary); cursor: pointer; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
         td { padding: 15px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-        tr:hover { background: rgba(255, 255, 255, 0.03); }
 
         .hex-label { display: block; margin-top: 8px; font-family: 'Segoe UI', Courier, monospace; font-size: 0.90rem; color: #ffffff; font-weight: bold; }
         .jersey-cell { font-size: 1.4rem; font-weight: 900; color: var(--primary); text-align: center; }
         
-        .poste-badge { padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; color: #ffffff; font-weight: 600; text-transform: uppercase; display: inline-block; border: 1px solid rgba(255,255,255,0.1); }
+        .poste-badge { padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; color: #ffffff; font-weight: 600; text-transform: uppercase; display: inline-block; }
         .poste-milieu { background-color: var(--color-milieu); }
         .poste-attaquante { background-color: var(--color-attaque); }
         .poste-defenseure { background-color: var(--color-defense); }
         .poste-gardienne { background-color: var(--color-gardienne); }
 
-        .id-opta { font-family: 'Courier New', monospace; color: var(--id-color); font-size: 1.1rem; font-weight: bold; }
+        .id-opta { color: var(--id-color); font-size: 1.1rem; font-weight: bold; font-family: monospace; }
         .btn-export { background: var(--accent); color: white; padding: 8px 15px; font-size: 0.8rem; }
-        .btn-export-all { background: linear-gradient(135deg, var(--accent), #1e7e34); color: white; width: 100%; padding: 20px; margin-top: 30px; font-size: 1.1rem; font-weight: 800; }
+        .btn-export-all { background: linear-gradient(135deg, var(--accent), #1e7e34); color: white; width: 100%; padding: 20px; margin-top: 30px; font-weight: 800; font-size: 1.1rem; }
     </style>
 </head>
 <body>
@@ -85,14 +67,15 @@
     <div class="controls">
         <div class="config-row">
             <div>
-                <label style="font-size: 0.8rem; color: var(--text-dim); display: block; margin-bottom: 5px;">SAISON :</label>
-                <input type="number" id="seasonYear" value="2025" min="2000" max="2100">
+                <label style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 5px;">SAISON</label>
+                <input type="number" id="seasonYear" value="2025">
             </div>
             <button id="btnInit" class="btn-load" onclick="chargerXML()">Actualiser le flux</button>
         </div>
+        <div id="status-msg"></div>
         
-        <div id="selectionEquipe" style="display: none; align-items: center; gap: 15px; justify-content: center;">
-            <label style="font-weight: bold;">CHOIX DE L'ÉQUIPE :</label>
+        <div id="selectionEquipe" style="display: none; margin-top: 20px;">
+            <label style="font-weight: bold; margin-right: 10px;">CHOIX DE L'ÉQUIPE :</label>
             <select id="teamDropdown" onchange="chargerJoueusesParEquipe()"></select>
         </div>
     </div>
@@ -101,10 +84,10 @@
         <table>
             <thead>
                 <tr>
-                    <th onclick="trierTableau('numero')" style="width: 80px; text-align: center;">N° <span id="icon-numero" class="sort-icon"></span></th>
-                    <th onclick="trierTableau('prenom')">Prénom <span id="icon-prenom" class="sort-icon"></span></th>
-                    <th onclick="trierTableau('nom')">Nom <span id="icon-nom" class="sort-icon"></span></th>
-                    <th onclick="trierTableau('poste')">Poste <span id="icon-poste" class="sort-icon"></span></th>
+                    <th onclick="trierTableau('numero')" style="width: 80px; text-align: center;">N°</th>
+                    <th onclick="trierTableau('prenom')">Prénom</th>
+                    <th onclick="trierTableau('nom')">Nom</th>
+                    <th onclick="trierTableau('poste')">Poste</th>
                     <th>ID Opta</th>
                     <th style="text-align: right;">Action</th>
                 </tr>
@@ -113,88 +96,24 @@
         </table>
     </div>
 
-    <button id="btnExportAll" class="btn-export-all" style="display: none;" onclick="exporterToutLeGroupe()">EXPORTER L'EFFECTIF COMPLET (1-99) VERS EXCEL</button>
+    <button id="btnExportAll" class="btn-export-all" style="display: none;" onclick="exporterToutLeGroupe()">EXPORTER L'EFFECTIF COMPLET (1-99)</button>
 </div>
 
 <script>
-// URL masquée
 const _0xop = "aHR0cHM6Ly9vbW8uYWthbWFpLm9wdGEubmV0L2NvbXBldGl0aW9uLnBocD9jb21wZXRpdGlvbj05MTQmdXNlcj1FVVJPTUVESUEmcHN3PXo1NXNNc1JDJnNlYXNvbl9pZD0yMDI1Jm1hdGNoX2lkPTIzODc2MzgmZmVlZF90eXBlPUY0MA==";
 
 let xmlDoc = null;
 let currentPlayersData = [];
 let sortConfig = { key: 'numero', direction: 'asc' };
 
-const traduirePoste = (p) => {
-    const dico = { "forward": "attaquante", "midfielder": "milieu", "defender": "défenseure", "goalkeeper": "gardienne" };
-    return dico[p.trim().toLowerCase()] || p;
-};
-
 function cleanText(text, forceUppercase = false) {
     if (!text || text.trim().toLowerCase() === "unknown") return "-";
     return forceUppercase ? text.trim().toUpperCase() : text.trim();
 }
 
-async function chargerXML() {
-    const btn = document.getElementById('btnInit');
-    const season = document.getElementById('seasonYear').value;
-    btn.textContent = "Chargement...";
-    btn.disabled = true;
-
-    try {
-        let url = atob(_0xop);
-        url = url.replace(/season_id=\d+/, "season_id=" + season);
-        
-        // On essaye un proxy plus permissif
-        const proxy = "https://corsproxy.io/?"; 
-        const response = await fetch(proxy + encodeURIComponent(url));
-        
-        if (!response.ok) throw new Error("Réponse proxy non valide");
-        
-        const text = await response.text();
-        
-        // Sécurité au cas où le proxy renverrait du HTML d'erreur
-        if (text.includes("<html>")) {
-             throw new Error("Le flux a renvoyé du HTML au lieu du XML. Problème de proxy.");
-        }
-
-        xmlDoc = new DOMParser().parseFromString(text, "text/xml");
-        
-        // Vérification si le XML est valide
-        if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
-            throw new Error("Erreur lors de la lecture des données XML.");
-        }
-
-        remplirListeEquipes();
-        
-        const currentTeam = document.getElementById('teamDropdown').value;
-        if(currentTeam) chargerJoueusesParEquipe();
-        
-    } catch (e) { 
-        console.error("Détails de l'erreur:", e);
-        alert("Erreur de connexion : " + e.message + "\n\nConseil : Si vous êtes en local, essayez d'utiliser l'extension 'Allow CORS' sur Chrome ou de lancer un petit serveur local."); 
-    } finally {
-        btn.textContent = "Actualiser le flux";
-        btn.disabled = false;
-    }
-}
-
-function remplirListeEquipes() {
-    const teams = xmlDoc.getElementsByTagName("Team");
-    const dropdown = document.getElementById('teamDropdown');
-    const currentSelection = dropdown.value;
-    dropdown.innerHTML = '<option value="">-- Sélectionnez --</option>';
-    let vus = new Set();
-    for (let i = 0; i < teams.length; i++) {
-        const id = teams[i].getAttribute("uID");
-        const name = teams[i].getElementsByTagName("Name")[0]?.textContent || id;
-        if (id && !vus.has(id)) { 
-            vus.add(id); 
-            const opt = new Option(name, id);
-            if(id === currentSelection) opt.selected = true;
-            dropdown.add(opt); 
-        }
-    }
-    document.getElementById('selectionEquipe').style.display = 'flex';
+function traduirePoste(p) {
+    const dico = { "forward": "attaquante", "midfielder": "milieu", "defender": "défenseure", "goalkeeper": "gardienne" };
+    return dico[p.trim().toLowerCase()] || p;
 }
 
 function getStatValue(playerNode, typeValue, forceCaps = false) {
@@ -205,16 +124,80 @@ function getStatValue(playerNode, typeValue, forceCaps = false) {
     return "-";
 }
 
+async function fetchWithProxy(url) {
+    // Tentative 1 : AllOrigins
+    try {
+        const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
+        if (res.ok) {
+            const data = await res.json();
+            return data.contents;
+        }
+    } catch (e) {}
+
+    // Tentative 2 : Proxy Alternatif (CORS Proxy bypass)
+    try {
+        const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
+        if (res.ok) return await res.text();
+    } catch (e) {}
+
+    throw new Error("Tous les proxys ont échoué. Réessayez dans quelques secondes.");
+}
+
+async function chargerXML() {
+    const btn = document.getElementById('btnInit');
+    const status = document.getElementById('status-msg');
+    const season = document.getElementById('seasonYear').value;
+    
+    status.textContent = "Connexion au flux Opta...";
+    status.style.color = "var(--id-color)";
+    btn.disabled = true;
+
+    try {
+        let url = atob(_0xop).replace(/season_id=\d+/, "season_id=" + season);
+        const xmlContent = await fetchWithProxy(url);
+        
+        xmlDoc = new DOMParser().parseFromString(xmlContent, "text/xml");
+
+        if (xmlDoc.getElementsByTagName("Team").length === 0) {
+            throw new Error("Fichier vide ou saison non valide.");
+        }
+
+        status.textContent = "Flux chargé avec succès !";
+        status.style.color = "var(--accent)";
+        remplirListeEquipes();
+        
+    } catch (e) {
+        status.textContent = "ERREUR : " + e.message;
+        status.style.color = "#dc3545";
+    } finally {
+        btn.disabled = false;
+    }
+}
+
+function remplirListeEquipes() {
+    const teams = xmlDoc.getElementsByTagName("Team");
+    const dropdown = document.getElementById('teamDropdown');
+    dropdown.innerHTML = '<option value="">-- Sélectionnez une équipe --</option>';
+    let vus = new Set();
+    for (let i = 0; i < teams.length; i++) {
+        const id = teams[i].getAttribute("uID");
+        const name = teams[i].getElementsByTagName("Name")[0]?.textContent || id;
+        if (id && !vus.has(id)) { vus.add(id); dropdown.add(new Option(name, id)); }
+    }
+    document.getElementById('selectionEquipe').style.display = 'block';
+}
+
 function chargerJoueusesParEquipe() {
     const teamId = document.getElementById('teamDropdown').value;
     if (!teamId) return;
+    
     currentPlayersData = [];
     const teams = xmlDoc.getElementsByTagName("Team");
-    let targetTeam = null;
-    for (let t of teams) { if (t.getAttribute("uID") === teamId) { targetTeam = t; break; } }
+    let target = null;
+    for (let t of teams) { if (t.getAttribute("uID") === teamId) { target = t; break; } }
 
-    if (targetTeam) {
-        const players = targetTeam.getElementsByTagName("Player");
+    if (target) {
+        const players = target.getElementsByTagName("Player");
         for (let p of players) {
             const rawPoste = p.getElementsByTagName("Position")[0]?.textContent || "-";
             currentPlayersData.push({
@@ -225,24 +208,26 @@ function chargerJoueusesParEquipe() {
                 numero: getStatValue(p, "jersey_num", false)
             });
         }
-        trierTableau(sortConfig.key, true);
+        trierTableau('numero', true);
         document.getElementById('tableContainer').style.display = 'block';
         document.getElementById('btnExportAll').style.display = 'block';
     }
 }
 
-function trierTableau(key, keepDirection = false) {
-    if (!keepDirection) {
-        if (sortConfig.key === key) sortConfig.direction = sortConfig.direction === 'asc' ? 'desc' : 'asc';
-        else { sortConfig.key = key; sortConfig.direction = 'asc'; }
+function trierTableau(key, keep = false) {
+    if (!keep) {
+        sortConfig.direction = (sortConfig.key === key && sortConfig.direction === 'asc') ? 'desc' : 'asc';
+        sortConfig.key = key;
     }
     currentPlayersData.sort((a, b) => {
-        let valA = a[key], valB = b[key];
+        let vA = a[key], vB = b[key];
         if (key === 'numero') {
-            valA = valA === "-" ? 999 : parseInt(valA);
-            valB = valB === "-" ? 999 : parseInt(valB);
+            vA = vA === "-" ? 999 : parseInt(vA);
+            vB = vB === "-" ? 999 : parseInt(vB);
         }
-        return sortConfig.direction === 'asc' ? (valA < valB ? -1 : 1) : (valA > valB ? -1 : 1);
+        if (vA < vB) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (vA > vB) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
     });
     renderTable();
 }
@@ -250,29 +235,25 @@ function trierTableau(key, keepDirection = false) {
 function renderTable() {
     const tbody = document.getElementById('playerTableBody');
     tbody.innerHTML = "";
-    ['numero', 'prenom', 'nom', 'poste'].forEach(k => {
-        const icon = document.getElementById(`icon-${k}`);
-        if (icon) icon.textContent = sortConfig.key === k ? (sortConfig.direction === 'asc' ? ' ▲' : ' ▼') : '';
-    });
     currentPlayersData.forEach(p => {
         const row = tbody.insertRow();
         row.insertCell(0).className = "jersey-cell"; row.cells[0].textContent = p.numero;
         row.insertCell(1).innerHTML = `<span class="hex-label">${p.prenom}</span>`;
         row.insertCell(2).innerHTML = `<span class="hex-label">${p.nom}</span>`;
-        const nPoste = p.poste.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-        row.insertCell(3).innerHTML = `<span class="poste-badge poste-${nPoste}">${p.poste}</span>`;
+        const nP = p.poste.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+        row.insertCell(3).innerHTML = `<span class="poste-badge poste-${nP}">${p.poste}</span>`;
         row.insertCell(4).innerHTML = `<span class="id-opta">${p.idOpta}</span>`;
+        
         const btn = document.createElement("button"); btn.textContent = "Export"; btn.className = "btn-export";
-        btn.onclick = () => copierTexte(`${p.numero}\t${p.prenom}\t${p.nom}\t${p.poste}\t${p.idOpta}`, btn);
+        btn.onclick = () => copier(`${p.numero}\t${p.prenom}\t${p.nom}\t${p.poste}\t${p.idOpta}`, btn);
         row.insertCell(5).style.textAlign = "right"; row.cells[5].appendChild(btn);
     });
 }
 
-function copierTexte(txt, btn) {
-    const el = document.createElement("textarea"); el.value = txt; el.style.position = "fixed"; el.style.left = "-9999px";
-    document.body.appendChild(el); el.select(); document.execCommand('copy');
-    const old = btn.textContent; btn.textContent = "COPIÉ !"; setTimeout(() => btn.textContent = old, 1500);
-    document.body.removeChild(el);
+function copier(t, b) {
+    const el = document.createElement("textarea"); el.value = t; document.body.appendChild(el); el.select();
+    document.execCommand('copy'); document.body.removeChild(el);
+    const bText = b.textContent; b.textContent = "OK !"; setTimeout(() => b.textContent = bText, 1000);
 }
 
 function exporterToutLeGroupe() {
@@ -281,8 +262,10 @@ function exporterToutLeGroupe() {
         const p = currentPlayersData.find(x => parseInt(x.numero) === i);
         lignes.push(p ? `${p.numero}\t${p.prenom}\t${p.nom}\t${p.poste}\t${p.idOpta}` : `${i}\t\t\t\t`);
     }
-    currentPlayersData.filter(x => x.numero === "-").forEach(j => lignes.push(`-\t${j.prenom}\t${j.nom}\t${j.poste}\t${j.idOpta}`));
-    copierTexte(lignes.join("\n"), document.getElementById('btnExportAll'));
+    currentPlayersData.filter(x => x.numero === "-").forEach(j => {
+        lignes.push(`-\t${j.prenom}\t${j.nom}\t${j.poste}\t${j.idOpta}`);
+    });
+    copier(lignes.join("\n"), document.getElementById('btnExportAll'));
 }
 </script>
 </body>
