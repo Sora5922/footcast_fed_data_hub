@@ -124,23 +124,29 @@ function getStatValue(playerNode, typeValue, forceCaps = false) {
     return "-";
 }
 
+// Système de secours multi-proxy intelligent
 async function fetchWithProxy(url) {
-    // Tentative 1 : AllOrigins
-    try {
-        const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`);
-        if (res.ok) {
-            const data = await res.json();
-            return data.contents;
+    const proxies = [
+        // 1. AllOrigins (JSON Wrapper)
+        async (u) => {
+            const r = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(u)}`);
+            const j = await r.json();
+            return j.contents;
+        },
+        // 2. Corsproxy.io (Direct Text)
+        async (u) => {
+            const r = await fetch(`https://corsproxy.io/?${encodeURIComponent(u)}`);
+            return await r.text();
         }
-    } catch (e) {}
+    ];
 
-    // Tentative 2 : Proxy Alternatif (CORS Proxy bypass)
-    try {
-        const res = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`);
-        if (res.ok) return await res.text();
-    } catch (e) {}
-
-    throw new Error("Tous les proxys ont échoué. Réessayez dans quelques secondes.");
+    for (let proxyFn of proxies) {
+        try {
+            const result = await proxyFn(url);
+            if (result && result.length > 100) return result; // Vérifie qu'on a bien reçu du XML
+        } catch (e) { console.warn("Proxy failed, trying next..."); }
+    }
+    throw new Error("Aucun proxy n'a pu joindre Opta. Vérifiez votre connexion.");
 }
 
 async function chargerXML() {
@@ -148,7 +154,7 @@ async function chargerXML() {
     const status = document.getElementById('status-msg');
     const season = document.getElementById('seasonYear').value;
     
-    status.textContent = "Connexion au flux Opta...";
+    status.textContent = "Négociation avec les proxys (veuillez patienter)...";
     status.style.color = "var(--id-color)";
     btn.disabled = true;
 
@@ -159,10 +165,10 @@ async function chargerXML() {
         xmlDoc = new DOMParser().parseFromString(xmlContent, "text/xml");
 
         if (xmlDoc.getElementsByTagName("Team").length === 0) {
-            throw new Error("Fichier vide ou saison non valide.");
+            throw new Error("Flux vide (Saison " + season + " non disponible ?)");
         }
 
-        status.textContent = "Flux chargé avec succès !";
+        status.textContent = "Flux Saison " + season + " chargé !";
         status.style.color = "var(--accent)";
         remplirListeEquipes();
         
@@ -177,7 +183,7 @@ async function chargerXML() {
 function remplirListeEquipes() {
     const teams = xmlDoc.getElementsByTagName("Team");
     const dropdown = document.getElementById('teamDropdown');
-    dropdown.innerHTML = '<option value="">-- Sélectionnez une équipe --</option>';
+    dropdown.innerHTML = '<option value="">-- Sélectionnez --</option>';
     let vus = new Set();
     for (let i = 0; i < teams.length; i++) {
         const id = teams[i].getAttribute("uID");
